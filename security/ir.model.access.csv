@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sos_accounting_user,sos.accounting user,model_sos_accounting,base.group_user,1,1,1,1
+access_sos_accounting_manager,sos.accounting manager,model_sos_accounting,account.group_account_manager,1,1,1,1
+access_sos_accounting_wizard_user,sos.accounting wizard user,model_sos_accounting_wizard,base.group_user,1,1,1,1
+access_sos_accounting_wizard_manager,sos.accounting wizard manager,model_sos_accounting_wizard,account.group_account_manager,1,1,1,1

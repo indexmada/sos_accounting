@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sos_accounting_tree" model="ir.ui.view">
+        <field name="name">sos.accounting.tree</field>
+        <field name="model">sos.accounting</field>
+        <field name="arch" type="xml">
+            <tree string="Tableau prévisionnel de trésorerie">
+                <field name="date"/>
+                <field name="current_balance"/>
+                <field name="client_payable"/>
+                <field name="supplier_payable"/>
+                <field name="client_order_to_invoice"/>
+                <field name="supplier_order_to_invoice"/>
+                <field name="forecast_balance"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sos_accounting_form" model="ir.ui.view">
+        <field name="name">sos.accounting.form</field>
+        <field name="model">sos.accounting</field>
+        <field name="arch" type="xml">
+            <form string="Sos Accounting">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="current_balance"/>
+                            <field name="client_payable"/>
+                        </group>
+                        <group>
+                            <field name="supplier_payable"/>
+                            <field name="client_order_to_invoice"/>
+                            <field name="supplier_order_to_invoice"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="forecast_balance"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sos_accounting" model="ir.actions.act_window">
+        <field name="name">Tableau prévisionnel de trésorerie</field>
+        <field name="res_model">sos.accounting</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- <menuitem id="menu_sos_accounting_1"
+        name="Prévision de trésorerie"
+        parent="account.menu_finance_reports"
+        action="action_sos_accounting"
+        sequence="50"/> -->
+</odoo>
