@@ -66,7 +66,7 @@ class ExportSosAccountingController(http.Controller):
             for cash in cash_journal:
                 c_balance = request.env['account.move.line'].search([
                     ('journal_id', '=', cash.id),
-                    ('date', '=', date),
+                    # ('date', '=', date),
                 ], order='date desc', limit=1)
                 dict_resp = {'name': c_balance.journal_id.name, 'balance': c_balance.balance}
                 all_journal.append(dict_resp)
@@ -75,7 +75,7 @@ class ExportSosAccountingController(http.Controller):
             for bank in bank_journal:
                 b_balance = request.env['account.move.line'].search([
                     ('journal_id', '=', bank.id),
-                    ('date', '=', date),
+                    # ('date', '=', date),
                 ], order='date desc', limit=1)
                 dict_resp = {'name': b_balance.journal_id.name, 'balance': b_balance.balance}
                 all_journal.append(dict_resp)
@@ -87,7 +87,7 @@ class ExportSosAccountingController(http.Controller):
             ('move_type', '=', 'out_invoice'),
             ('state', '=', 'posted'),
             ('payment_state', '!=', 'paid'),
-            ('invoice_date', '=', date)
+            # ('invoice_date', '=', date)
         ])
         total_amount_unpaid_customer_invoices = sum(unpaid_customer_invoices.mapped('amount_total'))
 
@@ -96,7 +96,7 @@ class ExportSosAccountingController(http.Controller):
             ('move_type', '=', 'in_invoice'),
             ('state', '=', 'posted'),
             ('payment_state', '!=', 'paid'),
-            ('invoice_date', '=', date)
+            # ('invoice_date', '=', date)
         ])
         total_amount_unpaid_vendor_bills = sum(unpaid_vendor_bills.mapped('amount_total'))
 
@@ -104,7 +104,7 @@ class ExportSosAccountingController(http.Controller):
         unfactured_customer_orders = request.env['sale.order'].search([
             ('state', '=', 'sale'),
             ('invoice_status', '!=', 'invoiced'),
-            ('date_order', '=', date)
+            # ('date_order', '=', date)
         ])
         total_amount_unfactured_customer_orders = sum(unfactured_customer_orders.mapped('amount_total'))
 
@@ -112,19 +112,19 @@ class ExportSosAccountingController(http.Controller):
         unfactured_vendor_orders = request.env['purchase.order'].search([
             ('state', '=', 'purchase'),
             ('invoice_status', '!=', 'invoiced'),
-            ('date_order', '=', date)
+            # ('date_order', '=', date)
         ])
         total_amount_unfactured_vendor_orders = sum(unfactured_vendor_orders.mapped('amount_total'))
         
         date_str = fields.Date.from_string(date).strftime("%d/%m/%Y")
         # domain_history = [('date', '=', date)]
-        title = "Prévision du " + str(date_str)
+        title = "Prévision"
         filename = "Rapport prévision du " + str(date_str)
 
         workbook = xlwt.Workbook(encoding='utf-8')
         sheet_etat = workbook.add_sheet("Prévision comptable")
         filename = filename + ".xls"
-        style_row = xlwt.easyxf('align: wrap yes;')
+        style_row = xlwt.easyxf('align: wrap yes, horiz right;')
 
          ### IN HEADER ###
         col = 0
@@ -162,11 +162,19 @@ class ExportSosAccountingController(http.Controller):
             + total_amount_unfactured_customer_orders
             - total_amount_unfactured_vendor_orders
         )
+
+        formatted_total_balance = '{:,.2f}'.format(total_balance).replace(',', ' ')
+        formatted_total_amount_unpaid_customer_invoices = '{:,.2f}'.format(total_amount_unpaid_customer_invoices).replace(',', ' ')
+        formatted_total_amount_unpaid_vendor_bills = '{:,.2f}'.format(total_amount_unpaid_vendor_bills).replace(',', ' ')
+        formatted_total_amount_unfactured_customer_orders = '{:,.2f}'.format(total_amount_unfactured_customer_orders).replace(',', ' ')
+        formatted_total_amount_unfactured_vendor_orders = '{:,.2f}'.format(total_amount_unfactured_vendor_orders).replace(',', ' ')
+        formatted_forecast_balance = '{:,.2f}'.format(forecast_balance).replace(',', ' ')
         for journal in all_journal:
             if str(journal['name']) == 'False' and journal['balance'] == 0.0:
                 continue
-            sheet_etat.write(row, COLONNE_EXPORT['journal'], journal['name'], style_row)
-            sheet_etat.write(row, COLONNE_EXPORT['solde_actuel'], journal['balance'], style_row)
+            formatted_journal_balance = '{:,.2f}'.format(journal['balance']).replace(',', ' ')
+            sheet_etat.write(row, COLONNE_EXPORT['journal'], journal['name'], xlwt.easyxf('align: wrap yes;'))
+            sheet_etat.write(row, COLONNE_EXPORT['solde_actuel'], formatted_journal_balance, style_row)
             # sheet_etat.write(row, COLONNE_EXPORT['a_payer_client'], total_amount_unpaid_customer_invoices, style_row)
             # sheet_etat.write(row, COLONNE_EXPORT['a_payer_fournisseur'], total_amount_unpaid_vendor_bills, style_row)
             # sheet_etat.write(row, COLONNE_EXPORT['commande_client_a_facturer'], total_amount_unfactured_customer_orders, style_row)
@@ -177,19 +185,19 @@ class ExportSosAccountingController(http.Controller):
         if any(str(elem['name']) != 'False' for elem in all_journal):
             # Determine the range of rows to merge in column X
             start_row = 2
-            sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['a_payer_client'], COLONNE_EXPORT['a_payer_client'], total_amount_unpaid_customer_invoices, xlwt.easyxf("align: vert center; font: bold 1;"))
-            sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['a_payer_fournisseur'], COLONNE_EXPORT['a_payer_fournisseur'], total_amount_unpaid_vendor_bills, xlwt.easyxf("align: vert center; font: bold 1;"))
-            sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['commande_client_a_facturer'], COLONNE_EXPORT['commande_client_a_facturer'], total_amount_unfactured_customer_orders, xlwt.easyxf("align: vert center; font: bold 1;"))
-            sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['commande_fournisseur_a_facturer'], COLONNE_EXPORT['commande_fournisseur_a_facturer'], total_amount_unfactured_vendor_orders, xlwt.easyxf("align: vert center; font: bold 1;"))
-            sheet_etat.write_merge(start_row, row, COLONNE_EXPORT['solde_previsionnel'], COLONNE_EXPORT['solde_previsionnel'], forecast_balance, xlwt.easyxf("align: vert center; font: bold 1;"))
+            sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['a_payer_client'], COLONNE_EXPORT['a_payer_client'], formatted_total_amount_unpaid_customer_invoices, xlwt.easyxf("align: vert center, horiz right; font: bold 1;"))
+            sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['a_payer_fournisseur'], COLONNE_EXPORT['a_payer_fournisseur'], formatted_total_amount_unpaid_vendor_bills, xlwt.easyxf("align: vert center, horiz right; font: bold 1;"))
+            sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['commande_client_a_facturer'], COLONNE_EXPORT['commande_client_a_facturer'], formatted_total_amount_unfactured_customer_orders, xlwt.easyxf("align: vert center, horiz right; font: bold 1;"))
+            sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['commande_fournisseur_a_facturer'], COLONNE_EXPORT['commande_fournisseur_a_facturer'], formatted_total_amount_unfactured_vendor_orders, xlwt.easyxf("align: vert center, horiz right; font: bold 1;"))
+            sheet_etat.write_merge(start_row, row, COLONNE_EXPORT['solde_previsionnel'], COLONNE_EXPORT['solde_previsionnel'], formatted_forecast_balance, xlwt.easyxf("align: vert center, horiz right; font: bold 1;"))
 
         sheet_etat.write(row, COLONNE_EXPORT['journal'], 'TOTAL', xlwt.easyxf("font : bold 1; align: wrap yes, horiz center; "))
-        sheet_etat.write(row, COLONNE_EXPORT['solde_actuel'], total_balance, xlwt.easyxf("font : bold 1; align: wrap yes; "))
-        sheet_etat.write(row, COLONNE_EXPORT['a_payer_client'], total_amount_unpaid_customer_invoices, style_row)
-        sheet_etat.write(row, COLONNE_EXPORT['a_payer_fournisseur'], total_amount_unpaid_vendor_bills, style_row)
-        sheet_etat.write(row, COLONNE_EXPORT['commande_client_a_facturer'], total_amount_unfactured_customer_orders, style_row)
-        sheet_etat.write(row, COLONNE_EXPORT['commande_fournisseur_a_facturer'], total_amount_unfactured_vendor_orders, style_row)
-        # sheet_etat.write(row, COLONNE_EXPORT['solde_previsionnel'], forecast_balance, xlwt.easyxf("font : bold 1; align: wrap yes; "))
+        sheet_etat.write(row, COLONNE_EXPORT['solde_actuel'], formatted_total_balance, xlwt.easyxf("font : bold 1; align: wrap yes, horiz right; "))
+        sheet_etat.write(row, COLONNE_EXPORT['a_payer_client'], formatted_total_amount_unpaid_customer_invoices, style_row)
+        sheet_etat.write(row, COLONNE_EXPORT['a_payer_fournisseur'], formatted_total_amount_unpaid_vendor_bills, style_row)
+        sheet_etat.write(row, COLONNE_EXPORT['commande_client_a_facturer'], formatted_total_amount_unfactured_customer_orders, style_row)
+        sheet_etat.write(row, COLONNE_EXPORT['commande_fournisseur_a_facturer'], formatted_total_amount_unfactured_vendor_orders, style_row)
+        # sheet_etat.write(row, COLONNE_EXPORT['solde_previsionnel'], formatted_forecast_balance, xlwt.easyxf("font : bold 1; align: wrap yes; "))
 
         f = BytesIO()
         workbook.save(f)

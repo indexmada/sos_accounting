@@ -7,7 +7,7 @@ class TreasuryForecastWizard(models.TransientModel):
     _name = 'sos.accounting.wizard'
     _description = 'Tableau prévisionnel de trésorerie Wizard'
 
-    date = fields.Date(string='Date')
+    date = fields.Date(string='Date', default=fields.Date.context_today)
 
     @api.model
     def export_sos_accounting_to_xls(self):

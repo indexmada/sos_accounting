@@ -11,8 +11,8 @@
     'depends': ['base', 'account'],
     'data': [
         'security/ir.model.access.csv',
-        # 'views/sos_accounting_view.xml',
-        # 'views/menu.xml',
+        'views/sos_accounting_view.xml',
+        'views/menu.xml',
         'wizard/sos_accounting_wizard_view.xml',
     ],
     'installable': True,

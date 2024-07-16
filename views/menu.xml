@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_sos_accounting_root"
-        name="Analyse finance"
-        sequence="50"/>
-
-    <menuitem id="menu_sos_accounting"
-        name="Prévision de trésorerie"
-        parent="menu_sos_accounting_root"
-        action="action_sos_accounting"
-        sequence="10"/>
+    <menuitem name="Analyse finance"
+        id="menu_sos_accounting_root"
+        sequence="55">
+        <menuitem id="menu_sos_accounting" name="Prévision de trésorerie" action="action_sos_accounting" sequence="56"/>
+    </menuitem>
 
     <!-- <menuitem id="menu_sos_accounting_wizard"
         name="Tableau prévisionnel de trésorerie"
