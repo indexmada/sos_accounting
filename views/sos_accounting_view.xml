@@ -5,7 +5,7 @@
         <field name="model">sos.accounting</field>
         <field name="arch" type="xml">
             <tree string="Tableau prévisionnel de trésorerie" create="false" export_xlsx="false">
-                <field name="date"/>
+                <field name="date" invisible="1"/>
                 <field name="current_balance"/>
                 <field name="client_payable"/>
                 <field name="supplier_payable"/>

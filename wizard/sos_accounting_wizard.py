@@ -11,8 +11,8 @@ class TreasuryForecastWizard(models.TransientModel):
 
     @api.model
     def export_sos_accounting_to_xls(self):
-        if not self.date:
-            raise ValidationError('Veuillez ajouter une date !')
+        # if not self.date:
+        #     raise ValidationError('Veuillez ajouter une date !')
         return {
             'type': 'ir.actions.act_url',
             'url': '/web/binary/export_sos_accounting_xls?id_export={}'.format(self.id),

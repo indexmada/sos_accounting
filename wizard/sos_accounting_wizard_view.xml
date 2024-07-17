@@ -5,12 +5,15 @@
         <field name="model">sos.accounting.wizard</field>
         <field name="arch" type="xml">
             <form string="Tableau prévisionnel de trésorerie">
-                <group>
+                <!-- <group>
                     <field name="date"/>
-                </group>
+                </group> -->
+                <p>
+                    Voulez-vous vraiement générer les prévision d'aujourd'hui ?
+                </p>
                 <footer>
-                    <button name="export_sos_accounting_to_xls" string="Générer" type="object" class="btn-primary"/>
-                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                    <button name="export_sos_accounting_to_xls" string="Oui" type="object" class="btn-primary"/>
+                    <button string="Non" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
         </field>

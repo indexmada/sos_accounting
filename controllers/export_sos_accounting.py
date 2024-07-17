@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import xlwt
 from io import BytesIO
 from odoo import http, fields
@@ -116,7 +117,10 @@ class ExportSosAccountingController(http.Controller):
         ])
         total_amount_unfactured_vendor_orders = sum(unfactured_vendor_orders.mapped('amount_total'))
         
-        date_str = fields.Date.from_string(date).strftime("%d/%m/%Y")
+        # get current date
+        today = datetime.datetime.now()
+        date_str = today.date().strftime("%d/%m/%Y")
+        # date_str = fields.Date.from_string(date).strftime("%d/%m/%Y")
         # domain_history = [('date', '=', date)]
         title = "Prévision"
         filename = "Rapport prévision du " + str(date_str)
