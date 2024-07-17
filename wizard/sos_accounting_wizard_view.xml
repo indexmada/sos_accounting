@@ -9,7 +9,7 @@
                     <field name="date"/>
                 </group> -->
                 <p>
-                    Voulez-vous vraiement générer les prévision d'aujourd'hui ?
+                    Voulez-vous vraiement générer les prévisions ?
                 </p>
                 <footer>
                     <button name="export_sos_accounting_to_xls" string="Oui" type="object" class="btn-primary"/>
