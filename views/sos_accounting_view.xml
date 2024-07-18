@@ -48,9 +48,11 @@
         <field name="view_mode">tree</field>
     </record>
 
-    <!-- <menuitem id="menu_sos_accounting_1"
-        name="Prévision de trésorerie"
-        parent="account.menu_finance_reports"
-        action="action_sos_accounting"
-        sequence="50"/> -->
+    <record id="action_update_sos_accounting" model="ir.actions.act_window">
+        <field name="name">Mettre à jour prévisions de trésorerie</field>
+        <field name="res_model">sos.accounting.update.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
 </odoo>

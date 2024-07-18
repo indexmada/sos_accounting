@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <menuitem name="Rapport comptable"
         id="menu_sos_accounting_root"
         sequence="55">
         <menuitem id="menu_sos_accounting" name="Prévision de trésorerie" action="action_sos_accounting" sequence="1"/>
+        <menuitem id="menu_config_sos_accounting" name="Configuration" sequence="99">
+            <menuitem id="menu_config_update_sos_accounting" name="Mettre à jour prévisions de trésorerie" action="action_update_sos_accounting" sequence="99"/>
+        </menuitem>
     </menuitem>
-
-    <!-- <menuitem id="menu_sos_accounting_wizard"
-        name="Tableau prévisionnel de trésorerie"
-        parent="menu_sos_accounting_root"
-        action="sos_accounting.action_sos_accounting_wizard"
-        sequence="20"/> -->
+    
 </odoo>

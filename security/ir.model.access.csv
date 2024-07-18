@@ -3,3 +3,5 @@ access_sos_accounting_user,sos.accounting user,model_sos_accounting,base.group_u
 access_sos_accounting_manager,sos.accounting manager,model_sos_accounting,account.group_account_manager,1,1,1,1
 access_sos_accounting_wizard_user,sos.accounting wizard user,model_sos_accounting_wizard,base.group_user,1,1,1,1
 access_sos_accounting_wizard_manager,sos.accounting wizard manager,model_sos_accounting_wizard,account.group_account_manager,1,1,1,1
+access_sos_accounting_update_wizard_user,sos. update wizard user,model_sos_accounting_update_wizard,base.group_user,1,1,1,1
+access_sos_accounting_update_wizard_manager,sos.accounting update wizard manager,model_sos_accounting_update_wizard,account.group_account_manager,1,1,1,1

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sos_accounting_update_wizard" model="ir.ui.view">
+        <field name="name">sos.accounting.update.wizard.form</field>
+        <field name="model">sos.accounting.update.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tableau prévisionnel de trésorerie">
+                <!-- <group>
+                    <field name="date"/>
+                </group> -->
+                <p>
+                    Voulez-vous vraiement mettre à niveau les prévisions ?
+                </p>
+                <footer>
+                    <button name="update_sos_accounting_data" string="Oui" type="object" class="btn-primary"/>
+                    <button string="Non" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- <record id="action_update_sos_accounting" model="ir.actions.act_window">
+        <field name="name">Mettre à jour prévisions de trésorerie</field>
+        <field name="res_model">sos.accounting.update.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record> -->
+
+</odoo>

@@ -4,7 +4,7 @@ class SosAccounting(models.Model):
     _name = 'sos.accounting'
     _description = 'Tableau prévisionnel de trésorerie'
 
-    date = fields.Date(string='Date', required=True)
+    date = fields.Date(string='Date')
     current_balance = fields.Float(string='Solde actuel')
     client_payable = fields.Float(string='A payer client')
     supplier_payable = fields.Float(string='A payer fournisseur')
