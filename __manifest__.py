@@ -10,6 +10,7 @@
     'author': 'Henintsoa Moria',
     'depends': ['base', 'account'],
     'data': [
+        'data/ir_cron.xml',
         'security/ir.model.access.csv',
         'views/sos_accounting_view.xml',
         'views/menu.xml',

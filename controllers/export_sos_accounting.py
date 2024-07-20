@@ -31,16 +31,16 @@ class DataSetController(DataSet):
     @http.route('/web/dataset/call_button', type='json', auth="user")
     def call_button(self, model, method, args, kwargs):
         if method == 'export_sos_accounting_to_xls':
-            # Get the wizard record
+            # Obtenir wizard record
             wizard = request.env['sos.accounting.wizard'].browse(args[0])
-            # Call the export_sos_accounting_to_xls method with the wizard record
+            # Appelez la méthode export_sos_accounting_to_xls avec wizard record
             return wizard.export_sos_accounting_to_xls()
         else:
             return super(DataSetController, self).call_button(model, method, args, kwargs)
         
 
 class ExportSosAccountingController(http.Controller):
-    """Function to export sos accounting """
+    """ Fonction pour exporter sos accounting """
 
     @http.route('/web/binary/export_sos_accounting_xls', type='http', auth="public")
     def download_sos_accounting_xls(self, id_export, **kw):
@@ -117,7 +117,7 @@ class ExportSosAccountingController(http.Controller):
         ])
         total_amount_unfactured_vendor_orders = sum(unfactured_vendor_orders.mapped('amount_total'))
         
-        # get current date
+        # obtenir date courant
         today = datetime.datetime.now()
         date_str = today.date().strftime("%d/%m/%Y")
         # date_str = fields.Date.from_string(date).strftime("%d/%m/%Y")
@@ -138,26 +138,11 @@ class ExportSosAccountingController(http.Controller):
             sheet_etat.write(1,col , nom_col,xlwt.easyxf("font : bold 1; align: wrap yes, horiz center; "))
             col += 1
             row = 2
-                    
-        # sos_accounting_history_entry = request.env['sos.accounting'].search(domain_history)
-        
+                            
         i = 0
         while i < 7:
             sheet_etat.col(i).width = 256 * 20
             i += 1
-            
-        # for sos in sorted(sos_accounting_history_entry, key=lambda p: p.date):
-        #     date = fields.Datetime.from_string(sos.date)
-        #     date = fields.Datetime.to_string(date)
-        #     date_str = fields.Date.from_string(date).strftime("%d/%m/%Y")
-        #     sheet_etat.write(row, COLONNE_EXPORT['date'], date_str, style_row)
-        #     sheet_etat.write(row, COLONNE_EXPORT['solde_actuel'], sos.current_balance, style_row)
-        #     sheet_etat.write(row, COLONNE_EXPORT['a_payer_client'], sos.client_payable, style_row)
-        #     sheet_etat.write(row, COLONNE_EXPORT['a_payer_fournisseur'], sos.supplier_payable, style_row)
-        #     sheet_etat.write(row, COLONNE_EXPORT['commande_client_a_facturer'], sos.client_order_to_invoice, style_row)
-        #     sheet_etat.write(row, COLONNE_EXPORT['commande_fournisseur_a_facturer'], sos.supplier_order_to_invoice, style_row)
-        #     sheet_etat.write(row, COLONNE_EXPORT['solde_previsionnel'], sos.forecast_balance, style_row)
-        #     row += 1
 
         forecast_balance = (
             total_balance
@@ -179,15 +164,10 @@ class ExportSosAccountingController(http.Controller):
             formatted_journal_balance = '{:,.2f}'.format(journal['balance']).replace(',', ' ')
             sheet_etat.write(row, COLONNE_EXPORT['journal'], journal['name'], xlwt.easyxf('align: wrap yes;'))
             sheet_etat.write(row, COLONNE_EXPORT['solde_actuel'], formatted_journal_balance, style_row)
-            # sheet_etat.write(row, COLONNE_EXPORT['a_payer_client'], total_amount_unpaid_customer_invoices, style_row)
-            # sheet_etat.write(row, COLONNE_EXPORT['a_payer_fournisseur'], total_amount_unpaid_vendor_bills, style_row)
-            # sheet_etat.write(row, COLONNE_EXPORT['commande_client_a_facturer'], total_amount_unfactured_customer_orders, style_row)
-            # sheet_etat.write(row, COLONNE_EXPORT['commande_fournisseur_a_facturer'], total_amount_unfactured_vendor_orders, style_row)
-            # sheet_etat.write(row, COLONNE_EXPORT['solde_previsionnel'], forecast_balance, style_row)
             row += 1
-        # Merge cells in column X from start_row to end_row
+        # Fusionner les cellules de la colonne X de start_row à end_row
         if any(str(elem['name']) != 'False' for elem in all_journal):
-            # Determine the range of rows to merge in column X
+            # Déterminer la plage de lignes à fusionner dans la colonne X
             start_row = 2
             sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['a_payer_client'], COLONNE_EXPORT['a_payer_client'], formatted_total_amount_unpaid_customer_invoices, xlwt.easyxf("align: vert center, horiz right; font: bold 1;"))
             sheet_etat.write_merge(start_row, row-1, COLONNE_EXPORT['a_payer_fournisseur'], COLONNE_EXPORT['a_payer_fournisseur'], formatted_total_amount_unpaid_vendor_bills, xlwt.easyxf("align: vert center, horiz right; font: bold 1;"))
@@ -201,7 +181,6 @@ class ExportSosAccountingController(http.Controller):
         sheet_etat.write(row, COLONNE_EXPORT['a_payer_fournisseur'], formatted_total_amount_unpaid_vendor_bills, style_row)
         sheet_etat.write(row, COLONNE_EXPORT['commande_client_a_facturer'], formatted_total_amount_unfactured_customer_orders, style_row)
         sheet_etat.write(row, COLONNE_EXPORT['commande_fournisseur_a_facturer'], formatted_total_amount_unfactured_vendor_orders, style_row)
-        # sheet_etat.write(row, COLONNE_EXPORT['solde_previsionnel'], formatted_forecast_balance, xlwt.easyxf("font : bold 1; align: wrap yes; "))
 
         f = BytesIO()
         workbook.save(f)

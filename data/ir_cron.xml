@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="seq_invoice_client" model="ir.sequence">
+            <field name="name">Client Invoice Sequence</field>
+            <field name="code">invoice.client</field>
+            <field name="prefix">FAC-%(year)s-%(month)s-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+        </record>
+        <record id="seq_invoice_supplier" model="ir.sequence">
+            <field name="name">Supplier Invoice Sequence</field>
+            <field name="code">invoice.supplier</field>
+            <field name="prefix">FACTU-%(year)s-%(month)s-</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+        </record>
+
+        <record id="ir_cron_invoice_sequence_reset" model="ir.cron">
+            <field name="name">Réinitialiser la séquence de facture mensuellement</field>
+            <field name="model_id" ref="sos_accounting.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_reset_invoice_sequence()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="datetime.now() + relativedelta(day=1, months=1)"/>
+        </record>
+    </data>
+</odoo>
