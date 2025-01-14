@@ -41,13 +41,13 @@ class AccountMove(models.Model):
                         sequence = self.env['ir.sequence'].search([('code', '=', 'invoice.supplier')], limit=1)
                         prefix = journal_id.code
                     
-                    # Vérifiez si invoice_date est défini et si c'était dans le mois précédent
+                    # Vérifiez si invoice_date est défini
                     if move.invoice_date:
                         invoice_date = datetime.strptime(str(move.invoice_date), '%Y-%m-%d').date()
-                        year_invoice_date = str(invoice_date.year)[-2:]  # Utilisation de l'année complète
+                        year_invoice_date = str(invoice_date.year)[-2:]  # Utilisation de l'année de facturation
                         month_invoice_date = str(invoice_date.month).zfill(2)  # Mois formaté avec 2 chiffres
 
-                        # Si la facture est dans le mois précédent (par exemple, décembre 2023 pour une facture de janvier 2024)
+                        # Si la facture est dans le mois précédent
                         if invoice_date.month < datetime.now().month:
                             # Recherche des dernières factures créées dans ce mois pour calculer la séquence
                             last_invoice = self.search([
@@ -63,7 +63,7 @@ class AccountMove(models.Model):
                                 # Si aucune facture existante, commence à 1
                                 n_sequence = 1
 
-                            # Formate le numéro de facture
+                            # Formate le numéro de facture avec l'année de facturation
                             formatted_sequence = f"{prefix}-{year_invoice_date}{month_invoice_date}-{n_sequence:05d}"
                             move.name = formatted_sequence
                         else:
